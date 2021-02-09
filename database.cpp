@@ -19,10 +19,14 @@ void DataBase::connectToDataBase()
 bool DataBase::openDataBase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
+    QDir dire = QDir::currentPath();
+    dire.cdUp();
+    QString path = dire.absolutePath() + "/listingP/dalist.db";
+    qDebug() << path;
     //QFileInfo file("/");
     db.setHostName(DATABASE_HOSTNAME);
 
-    db.setDatabaseName("D:/database/" DATABASE_NAME);
+    db.setDatabaseName(path);
     if(db.open()){
         return true;
     } else {
@@ -129,6 +133,55 @@ bool DataBase::removeRecord2(const int id)
 
     query.prepare("DELETE FROM " TABLEE " WHERE id= :ID ;");
     query.bindValue(":ID", id);
+
+    if(!query.exec()){
+        qDebug() << "error delete row " << TABLEE;
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+
+bool DataBase::updateTable3(const int id)
+{
+    QSqlQuery query;
+qDebug() << id;
+    query.prepare("UPDATE show SET br=:br WHERE id = 1 ");
+    query.bindValue(":br", id);
+
+    if(!query.exec()){
+        qDebug() << "error delete row " << TABLEE;
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+bool DataBase::updateTable2(const int id)
+{
+    QSqlQuery query;
+
+    query.prepare("UPDATE element SET checked = 1 WHERE id =:br");
+    query.bindValue(":br", id);
+
+    if(!query.exec()){
+        qDebug() << "error delete row " << TABLEE;
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+bool DataBase::updateTable2a(const int id)
+{
+    QSqlQuery query;
+
+    query.prepare("UPDATE element SET checked = 0 WHERE id =:br");
+    query.bindValue(":br", id);
 
     if(!query.exec()){
         qDebug() << "error delete row " << TABLEE;

@@ -27,7 +27,7 @@ signals:
 
 public slots:
     void updateModel();
-    void updateM(int i);
+
     int getId(int row);
 };
 

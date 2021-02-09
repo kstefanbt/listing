@@ -47,6 +47,9 @@ public slots:
     bool insertIntoTable2(const QString &id, const QString &name, const QString &checked, const QString  &list_id);
     bool removeRecord1(const int id);
     bool removeRecord2(const int id);
+    bool updateTable3(const int id);
+    bool updateTable2(const int id);
+    bool updateTable2a(const int id);
 
 };
 

@@ -29,16 +29,7 @@ QHash<int, QByteArray> ListModel2::roleNames() const {
 
 void ListModel2::updateModel()
 {
-    this->setQuery("SELECT id, " TABLEE_NAME ", " TABLEE_CHECKED ", " TABLEE_PID " FROM " TABLEE" WHERE " TABLEE_CHECKED " = 0 ");
-}
-
-void ListModel2::updateM(int i){
-    QSqlQuery query;
-    QString s = QString::number(i);
-    QString queryString = "SELECT id, name, checked, list_id FROM element WHERE list_id = " + s;
-    query.prepare(queryString);
-    this->setQuery(query);
-
+    this->setQuery("SELECT id, name FROM element WHERE checked = 0 AND list_id IN (SELECT br FROM show WHERE id = 1)");
 }
 
 int ListModel2::getId(int row)

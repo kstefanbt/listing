@@ -118,10 +118,11 @@ ApplicationWindow {
                 acceptedButtons: Qt.RightButton | Qt.LeftButton
                 onClicked: {
                     tableView.selection.clear()
+                    tableView2.selection.clear()
                     tableView.selection.select(styleData.row)
                     tableView.currentRow = styleData.row
                     tableView.focus = true
-
+                    database.updateTable3(myModel1.getId(tableView.currentRow))
                     switch(mouse.button) {
                     case Qt.RightButton:
                         contextMenu.popup()
@@ -131,9 +132,9 @@ ApplicationWindow {
                     }
                 }
                 onDoubleClicked: {
-                    //myModel2.updateModel()
-
-                    //myModel2.updateM(myModel1.getId(tableView.currentRow))
+                    tmp.text=myModel1.getId(tableView.currentRow)
+                    myModel2.updateModel()
+                    myModel4.updateModel()
                     tableView.visible = !tableView.visible
                     tableView2.visible = !tableView2.visible
                     newL.visible = !newL.visible
@@ -196,11 +197,12 @@ ApplicationWindow {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton | Qt.LeftButton
                 onClicked: {
+                    tableView2.selection.clear()
                     tableView.selection.clear()
-                    tableView.selection.select(styleData.row)
-                    tableView.currentRow = styleData.row
-                    tableView.focus = true
-
+                    tableView2.selection.select(styleData.row)
+                    tableView2.currentRow = styleData.row
+                    tableView2.focus = true
+                    database.updateTable3(myModel3.getId(tableView2.currentRow))
                     switch(mouse.button) {
                     case Qt.RightButton:
                         contextMenu2.popup()
@@ -211,7 +213,9 @@ ApplicationWindow {
                 }
 
                 onDoubleClicked: {
-                    //myModel4.updateModel()
+                    tmp.text=myModel3.getId(tableView2.currentRow)
+                    myModel2.updateModel()
+                    myModel4.updateModel()
                     tableView.visible = !tableView.visible
                     tableView2.visible = !tableView2.visible
                     newL.visible = !newL.visible
@@ -253,12 +257,18 @@ ApplicationWindow {
         }
     }
 
+    Text {
+         text: qsTr("")
+         id: tmp
+         visible: false
+    }
     Button {
         id: index
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5
+
         text: qsTr("My lists")
         visible: false
 
@@ -289,14 +299,6 @@ ApplicationWindow {
             role: "name"
             title: "Name"
         }
-        TableViewColumn {
-            role: "checked"
-            title: "checked"
-        }
-        TableViewColumn {
-            role: "listid"
-            title: "list_id"
-        }
         model: myModel2
 
 
@@ -308,6 +310,7 @@ ApplicationWindow {
                 acceptedButtons: Qt.RightButton | Qt.LeftButton
                 onClicked: {
                     tableView3.selection.clear()
+                    tableView4.selection.clear()
                     tableView3.selection.select(styleData.row)
                     tableView3.currentRow = styleData.row
                     tableView3.focus = true
@@ -334,6 +337,13 @@ ApplicationWindow {
                 dialogDelete3.open()
             }
         }
+        MenuItem {
+            text: qsTr("Check")
+            onTriggered: {
+
+                check.open()
+            }
+        }
     }
 
     MessageDialog {
@@ -345,8 +355,22 @@ ApplicationWindow {
 
         onAccepted: {
 
-            database.removeRecord2(myModel2.getId(tableView.currentRow))
+            database.removeRecord2(myModel2.getId(tableView3.currentRow))
             myModel2.updateModel();
+        }
+    }
+    MessageDialog {
+        id: check
+        title: qsTr("Check element")
+        text: qsTr("Confirm the checking of this element")
+        icon: StandardIcon.Warning
+        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+
+        onAccepted: {
+            database.updateTable2(myModel2.getId(tableView3.currentRow))
+            myModel2.updateModel();
+            myModel4.updateModel();
         }
     }
     RowLayout {
@@ -359,20 +383,19 @@ ApplicationWindow {
 
             spacing: 10
 
+
             Text {text: qsTr("Id")}
             TextField {id: idFieldE}
             Text {text: qsTr("Name")}
             TextField { id: nameFieldE}
             Text {text: qsTr("Checked")}
             TextField {id: checkedFieldE}
-            Text {text: qsTr("ListID")}
-            TextField {id: listIdFieldE}
 
             Button {
                 text: qsTr("Add new element")
 
                 onClicked: {
-                    database.insertIntoTable2(idFieldE.text, nameFieldE.text , checkedFieldE.text, listIdFieldE.text)
+                    database.insertIntoTable2(idFieldE.text, nameFieldE.text , checkedFieldE.text, tmp.text)
                     myModel2.updateModel()
                     myModel4.updateModel()
                     idFieldE.text = ""
@@ -400,14 +423,7 @@ ApplicationWindow {
             role: "name"
             title: "Name"
         }
-        TableViewColumn {
-            role: "checked"
-            title: "checked"
-        }
-        TableViewColumn {
-            role: "listid"
-            title: "list_id"
-        }
+
         model: myModel4
 
         rowDelegate: Rectangle {
@@ -418,6 +434,7 @@ ApplicationWindow {
                 acceptedButtons: Qt.RightButton | Qt.LeftButton
                 onClicked: {
                     tableView4.selection.clear()
+                    tableView3.selection.clear()
                     tableView4.selection.select(styleData.row)
                     tableView4.currentRow = styleData.row
                     tableView4.focus = true
@@ -443,6 +460,12 @@ ApplicationWindow {
                 dialogDelete4.open()
             }
         }
+        MenuItem {
+            text: qsTr("Uncheck")
+            onTriggered: {
+                uncheck.open()
+            }
+        }
     }
 
     MessageDialog {
@@ -455,7 +478,21 @@ ApplicationWindow {
 
         onAccepted: {
 
-            database.removeRecord2(myModel4.getId(tableView.currentRow))
+            database.removeRecord2(myModel4.getId(tableView4.currentRow))
+            myModel4.updateModel();
+        }
+    }
+    MessageDialog {
+        id: uncheck
+        title: qsTr("Uncheck element")
+        text: qsTr("Confirm the unchecking of this element")
+        icon: StandardIcon.Warning
+        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+
+        onAccepted: {
+            database.updateTable2a(myModel4.getId(tableView4.currentRow))
+            myModel2.updateModel();
             myModel4.updateModel();
         }
     }
