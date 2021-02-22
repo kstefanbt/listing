@@ -13,6 +13,7 @@ SOURCES += \
         listmodel2.cpp \
         listmodel3.cpp \
         listmodel4.cpp \
+        listmodel5.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -33,4 +34,5 @@ HEADERS += \
     listmodel1.h \
     listmodel2.h \
     listmodel3.h \
-    listmodel4.h
+    listmodel4.h \
+    listmodel5.h

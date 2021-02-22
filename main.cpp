@@ -6,6 +6,7 @@
 #include "listmodel2.h"
 #include "listmodel3.h"
 #include "listmodel4.h"
+#include "listmodel5.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,11 +25,13 @@ int main(int argc, char *argv[])
     ListModel2 *model2 = new ListModel2();
     ListModel3 *model3 = new ListModel3();
     ListModel4 *model4 = new ListModel4();
+    ListModel5 *model5 = new ListModel5();
 
     engine.rootContext()->setContextProperty("myModel1", model);
     engine.rootContext()->setContextProperty("myModel2", model2);
     engine.rootContext()->setContextProperty("myModel3", model3);
     engine.rootContext()->setContextProperty("myModel4", model4);
+    engine.rootContext()->setContextProperty("myModel5", model5);
     engine.rootContext()->setContextProperty("database", &database);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));

@@ -50,6 +50,10 @@ public slots:
     bool updateTable3(const int id);
     bool updateTable2(const int id);
     bool updateTable2a(const int id);
+    bool updateTable2b(const int id);
+    bool updateTable2c(const int id);
+    bool updateTable2d(const int id, const int idd);
+    bool updateTableNameE(QString s, const int idd);
 
 };
 

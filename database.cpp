@@ -76,6 +76,9 @@ bool DataBase::insertIntoTable1(const QString &id, const QString &name, const QS
 bool DataBase::removeRecord1(const int id)
 {
     QSqlQuery query;
+    query.prepare("DELETE FROM " TABLEE " WHERE list_id= :ID ;");
+    query.bindValue(":ID", id);
+    query.exec();
 
     query.prepare("DELETE FROM " TABLE " WHERE id= :ID ;");
     query.bindValue(":ID", id);
@@ -193,3 +196,75 @@ bool DataBase::updateTable2a(const int id)
     return false;
 }
 
+bool DataBase::updateTable2b(const int id)
+{
+    QSqlQuery query;
+
+    query.prepare("UPDATE list SET left = (SELECT left from list WHERE id =:br)+1 WHERE id =:br");
+    query.bindValue(":br", id);
+
+    if(!query.exec()){
+        qDebug() << "error delete row " << TABLE;
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+
+bool DataBase::updateTable2c(const int id)
+{
+    QSqlQuery query;
+
+    query.prepare("UPDATE list SET left = (SELECT left from list WHERE id =:br)-1 WHERE id =:br");
+    query.bindValue(":br", id);
+
+    if(!query.exec()){
+        qDebug() << "error delete row " << TABLE;
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+
+bool DataBase::updateTable2d(const int id, const int idd)
+{
+    QSqlQuery query;
+
+    if(id==0){
+        query.prepare("UPDATE list SET left = (SELECT left from list WHERE id =:br)+1 WHERE id =:br");
+        query.bindValue(":br", idd);
+
+        if(!query.exec()){
+            qDebug() << "error delete row " << TABLE;
+            qDebug() << query.lastError().text();
+            return false;
+        } else {
+            return true;
+        }
+        return false;
+
+    }
+    return false;
+}
+bool DataBase::updateTableNameE(QString s, const int idd)
+{
+    QSqlQuery query;
+
+        query.prepare("UPDATE element SET name =:s WHERE id =:br");
+        query.bindValue(":br", idd);
+        query.bindValue(":s", s);
+
+        if(!query.exec()){
+            qDebug() << "error delete row " << TABLE;
+            qDebug() << query.lastError().text();
+            return false;
+        } else {
+            return true;
+        }
+        return false;
+
+}

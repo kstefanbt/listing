@@ -184,6 +184,7 @@ ApplicationWindow {
                     tableView4.visible = !tableView4.visible
                     rowLayout3.visible = !rowLayout3.visible
                     index.visible = !index.visible
+//                    edit.visible = !edit.visible
                 }
             }
         }
@@ -269,6 +270,7 @@ ApplicationWindow {
                     tableView4.visible = !tableView4.visible
                     rowLayout3.visible = !rowLayout3.visible
                     index.visible = !index.visible
+//                  edit.visible = !edit.visible
                 }
             }
         }
@@ -298,7 +300,7 @@ ApplicationWindow {
 
         onAccepted: {
 
-            database.removeRecord1(myModel3.getId(tableView.currentRow))
+            database.removeRecord1(myModel3.getId(tableView2.currentRow))
             myModel3.updateModel();
         }
     }
@@ -329,6 +331,26 @@ ApplicationWindow {
         }
 
     }
+//    Button {
+//        id: edit
+//        anchors.top: parent.top
+//        anchors.left: index.right
+//        anchors.right: parent.right
+//        anchors.margins: 5
+
+//        text: qsTr("Edit")
+//        visible: false
+
+//        onClicked: {
+//            index.visible = !index.visible
+//            edit.visible = !edit.visible
+//            tableView3.visible = !tableView3.visible
+//            tableView4.visible = !tableView4.visible
+//            rowLayout3.visible = !rowLayout3.visible
+////            tableview5.visible != tableview5.visible
+//        }
+
+//    }
     TableView {
         id: tableView3
         anchors.top: index.bottom
@@ -348,12 +370,14 @@ ApplicationWindow {
                         tableView3.selection.select(styleData.row)
                         tableView3.currentRow = styleData.row
                         tableView3.focus = true
+                        database.updateTable2c(tmp.text)
                         database.updateTable2(myModel2.getId(tableView3.currentRow))
                         tableView3.selection.clear()
                         checkbox1.checked = false
 
                         tableView4.selection.clear()
-
+                        myModel1.updateModel();
+                        myModel3.updateModel();
                         myModel2.updateModel();
                         myModel4.updateModel();
                     }
@@ -437,13 +461,15 @@ ApplicationWindow {
                 text: qsTr("Add new element")
 
                 onClicked: {
+                    database.updateTable2d(checkedFieldE.text,tmp.text)
                     database.insertIntoTable2(idFieldE.text, nameFieldE.text , checkedFieldE.text, tmp.text)
+                    myModel1.updateModel()
+                    myModel3.updateModel()
                     myModel2.updateModel()
                     myModel4.updateModel()
                     idFieldE.text = ""
                     nameFieldE.text = ""
                     checkedFieldE.text = ""
-                    listIdFieldE.text = ""
                 }
             }
         }
@@ -470,10 +496,13 @@ ApplicationWindow {
                         tableView4.selection.select(styleData.row)
                         tableView4.currentRow = styleData.row
                         tableView4.focus = true
+                        database.updateTable2b(tmp.text)
                         database.updateTable2a(myModel4.getId(tableView4.currentRow))
                         tableView3.selection.clear()
                         checkbox2.checked = true
                         tableView4.selection.clear()
+                        myModel1.updateModel();
+                        myModel3.updateModel();
                         myModel2.updateModel();
                         myModel4.updateModel();
                     }
@@ -534,4 +563,34 @@ ApplicationWindow {
             myModel4.updateModel();
         }
     }
+//    TableView{
+//        id: tableview5
+//        anchors.top: parent.top
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+//        anchors.margins: 5
+//        visible: false
+//        model: myModel5
+//        TableViewColumn {
+//            role: "id"
+//            title: "ID"
+//        }
+//        TableViewColumn {
+//            role: "name"
+//            delegate: TextEdit{
+//                    id: textbox
+
+//                    onTextChanged: {
+//                        database.updateTableNameE(textbox.text, newL.text)
+//                        myModel1.updateModel();
+//                        myModel3.updateModel();
+//                        myModel2.updateModel();
+//                        myModel4.updateModel();
+//                        myModel5.updateModel();
+//                    }
+//                }
+//        }
+
+//    }
 }
+
