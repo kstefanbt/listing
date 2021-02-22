@@ -2,6 +2,8 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
+import QtQuick.Controls.Styles 1.4
+
 
 ApplicationWindow {
     visible: true
@@ -22,7 +24,26 @@ ApplicationWindow {
 
         Button {
             id: newL
-            text: qsTr("Create a new list")
+           //text: qsTr("Create a new list")
+           Text {
+                anchors.centerIn: parent
+                text: "Create a new list"
+                color: "red"
+
+               }
+           style: ButtonStyle {
+                   background: Rectangle {
+                       implicitWidth: 100
+                       implicitHeight: 25
+                       border.width: control.activeFocus ? 2 : 1
+                       border.color: "white"
+                       radius: 4
+                       gradient: Gradient {
+                           GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
+                           GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
+                       }
+                   }
+               }
             visible: true
 
             onClicked: {
@@ -43,18 +64,38 @@ ApplicationWindow {
         visible: false
 
         spacing: 10
+
         Text {
             text: qsTr("Name the list")
         }
+
+
         Text {text: qsTr("id")}
         TextField {id: idField}
         Text {text: qsTr("name")}
         TextField { id: nameField}
 
         Button {
-            text: qsTr("Create this list")
+            Text {
+                 anchors.centerIn: parent
+                 text: "Create this list"
+                 color: "black"
 
-
+            }
+            style: ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 25
+                        border.width: control.activeFocus ? 2 : 1
+                        border.color: "blue"
+                        color: "white"
+                        radius: 4
+                        gradient: Gradient {
+                            GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
+                            GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
+                        }
+                    }
+                }
             onClicked: {
                 database.insertIntoTable1(idField.text, nameField.text, "0")
                 myModel1.updateModel()
@@ -84,6 +125,7 @@ ApplicationWindow {
                 rowLayout2.visible = !rowLayout2.visible
                            }
         }
+
     }
 
     TableView {
@@ -216,6 +258,10 @@ ApplicationWindow {
                     tmp.text=myModel3.getId(tableView2.currentRow)
                     myModel2.updateModel()
                     myModel4.updateModel()
+                    tableView.selection.clear()
+                    tableView2.selection.clear()
+                    tableView3.selection.clear()
+                    tableView4.selection.clear()
                     tableView.visible = !tableView.visible
                     tableView2.visible = !tableView2.visible
                     newL.visible = !newL.visible
@@ -290,7 +336,29 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.margins: 5
         visible: false
+        TableViewColumn {
+            role: "checked"
 
+            delegate: CheckBox{
+                    id: checkbox1
+                    checked:false
+                    onClicked: {
+                        tableView3.selection.clear()
+                        tableView4.selection.clear()
+                        tableView3.selection.select(styleData.row)
+                        tableView3.currentRow = styleData.row
+                        tableView3.focus = true
+                        database.updateTable2(myModel2.getId(tableView3.currentRow))
+                        tableView3.selection.clear()
+                        checkbox1.checked = false
+
+                        tableView4.selection.clear()
+
+                        myModel2.updateModel();
+                        myModel4.updateModel();
+                    }
+                }
+        }
         TableViewColumn {
             role: "id"
             title: "ID"
@@ -309,12 +377,6 @@ ApplicationWindow {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton | Qt.LeftButton
                 onClicked: {
-                    tableView3.selection.clear()
-                    tableView4.selection.clear()
-                    tableView3.selection.select(styleData.row)
-                    tableView3.currentRow = styleData.row
-                    tableView3.focus = true
-
                     switch(mouse.button) {
                     case Qt.RightButton:
                         contextMenu3.popup()
@@ -337,13 +399,6 @@ ApplicationWindow {
                 dialogDelete3.open()
             }
         }
-        MenuItem {
-            text: qsTr("Check")
-            onTriggered: {
-
-                check.open()
-            }
-        }
     }
 
     MessageDialog {
@@ -359,20 +414,7 @@ ApplicationWindow {
             myModel2.updateModel();
         }
     }
-    MessageDialog {
-        id: check
-        title: qsTr("Check element")
-        text: qsTr("Confirm the checking of this element")
-        icon: StandardIcon.Warning
-        standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-
-        onAccepted: {
-            database.updateTable2(myModel2.getId(tableView3.currentRow))
-            myModel2.updateModel();
-            myModel4.updateModel();
-        }
-    }
     RowLayout {
             id: rowLayout3
             anchors.top: tableView3.bottom
@@ -416,6 +458,29 @@ ApplicationWindow {
         visible: false
 
         TableViewColumn {
+            role: "checked"
+
+            delegate: CheckBox{
+                    id: checkbox2
+                    checked:true
+                    onClicked: {
+                        tableView4.selection.clear()
+                        tableView3.selection.clear()
+
+                        tableView4.selection.select(styleData.row)
+                        tableView4.currentRow = styleData.row
+                        tableView4.focus = true
+                        database.updateTable2a(myModel4.getId(tableView4.currentRow))
+                        tableView3.selection.clear()
+                        checkbox2.checked = true
+                        tableView4.selection.clear()
+                        myModel2.updateModel();
+                        myModel4.updateModel();
+                    }
+                }
+        }
+
+        TableViewColumn {
             role: "id"
             title: "ID"
         }
@@ -433,12 +498,6 @@ ApplicationWindow {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton | Qt.LeftButton
                 onClicked: {
-                    tableView4.selection.clear()
-                    tableView3.selection.clear()
-                    tableView4.selection.select(styleData.row)
-                    tableView4.currentRow = styleData.row
-                    tableView4.focus = true
-
                     switch(mouse.button) {
                     case Qt.RightButton:
                         contextMenu4.popup()
@@ -460,12 +519,6 @@ ApplicationWindow {
                 dialogDelete4.open()
             }
         }
-        MenuItem {
-            text: qsTr("Uncheck")
-            onTriggered: {
-                uncheck.open()
-            }
-        }
     }
 
     MessageDialog {
@@ -475,26 +528,10 @@ ApplicationWindow {
         icon: StandardIcon.Warning
         standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-
         onAccepted: {
 
             database.removeRecord2(myModel4.getId(tableView4.currentRow))
             myModel4.updateModel();
         }
     }
-    MessageDialog {
-        id: uncheck
-        title: qsTr("Uncheck element")
-        text: qsTr("Confirm the unchecking of this element")
-        icon: StandardIcon.Warning
-        standardButtons: StandardButton.Ok | StandardButton.Cancel
-
-
-        onAccepted: {
-            database.updateTable2a(myModel4.getId(tableView4.currentRow))
-            myModel2.updateModel();
-            myModel4.updateModel();
-        }
-    }
-
 }
